@@ -1,0 +1,200 @@
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440001",
+    "name": "3-Foot Straight Putts",
+    "description": "Make putts from 3 feet on a straight line",
+    "category": "Putting",
+    "scoringType": "scored",
+    "defaultMaxScore": 5,
+    "isDefault": true
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440002",
+    "name": "6-Foot Circle Drill",
+    "description": "Putt from 6 different positions around a 6-foot circle",
+    "category": "Putting",
+    "scoringType": "scored",
+    "defaultMaxScore": 6,
+    "isDefault": true
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440003",
+    "name": "Distance Control - 10ft",
+    "description": "Focus on distance control to get within 3 feet of hole",
+    "category": "Putting",
+    "scoringType": "scored",
+    "defaultMaxScore": 5,
+    "isDefault": true
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440004",
+    "name": "Lag Putting Practice",
+    "description": "30+ foot putts focusing on getting within 3 feet",
+    "category": "Putting",
+    "scoringType": "scored",
+    "defaultMaxScore": 5,
+    "isDefault": true
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440005",
+    "name": "Chip to 3-Foot Circle",
+    "description": "Chip balls to land within 3 feet of pin",
+    "category": "Chipping",
+    "scoringType": "scored",
+    "defaultMaxScore": 5,
+    "isDefault": true
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440006",
+    "name": "Up and Down Challenge",
+    "description": "Chip and then putt for par from around the green",
+    "category": "Chipping",
+    "scoringType": "scored",
+    "defaultMaxScore": 5,
+    "isDefault": true
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440007",
+    "name": "Different Lie Practice",
+    "description": "Practice chipping from various lies (rough, tight, uphill, downhill)",
+    "category": "Chipping",
+    "scoringType": "scored",
+    "defaultMaxScore": 5,
+    "isDefault": true
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440008",
+    "name": "50-Yard Precision",
+    "description": "Hit pitch shots to within 10 feet of target from 50 yards",
+    "category": "Pitching",
+    "scoringType": "scored",
+    "defaultMaxScore": 5,
+    "isDefault": true
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440009",
+    "name": "High Soft Landing",
+    "description": "Hit high pitch shots that land softly near pin",
+    "category": "Pitching",
+    "scoringType": "scored",
+    "defaultMaxScore": 5,
+    "isDefault": true
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440010",
+    "name": "Distance Control Ladder",
+    "description": "Hit pitch shots to 30, 40, 50, 60, 70 yard targets",
+    "category": "Pitching",
+    "scoringType": "scored",
+    "defaultMaxScore": 5,
+    "isDefault": true
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440011",
+    "name": "7-Iron Target Practice",
+    "description": "Hit 7-iron shots to specific yardage targets",
+    "category": "Irons",
+    "scoringType": "scored",
+    "defaultMaxScore": 5,
+    "isDefault": true
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440012",
+    "name": "Ball-First Contact",
+    "description": "Focus on hitting ball before ground with irons",
+    "category": "Irons",
+    "scoringType": "scored",
+    "defaultMaxScore": 5,
+    "isDefault": true
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440013",
+    "name": "Different Iron Distances",
+    "description": "Practice with 6, 7, 8, 9 irons to their target distances",
+    "category": "Irons",
+    "scoringType": "scored",
+    "defaultMaxScore": 5,
+    "isDefault": true
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440014",
+    "name": "Fairway Accuracy",
+    "description": "Hit driver shots that land in fairway",
+    "category": "Driver",
+    "scoringType": "scored",
+    "defaultMaxScore": 5,
+    "isDefault": true
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440015",
+    "name": "Distance Control",
+    "description": "Focus on consistent distance with driver swings",
+    "category": "Driver",
+    "scoringType": "scored",
+    "defaultMaxScore": 5,
+    "isDefault": true
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440016",
+    "name": "Shot Shaping Practice",
+    "description": "Practice draws and fades with driver",
+    "category": "Driver",
+    "scoringType": "scored",
+    "defaultMaxScore": 5,
+    "isDefault": true
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440017",
+    "name": "Power Drive Session",
+    "description": "Focus on maximum distance and power with driver",
+    "category": "Driver",
+    "scoringType": "completion",
+    "defaultMaxScore": 1,
+    "isDefault": true
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440018",
+    "name": "Putting Routine Work",
+    "description": "Practice your pre-putt routine and setup",
+    "category": "Putting",
+    "scoringType": "completion",
+    "defaultMaxScore": 1,
+    "isDefault": true
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440019",
+    "name": "Tempo & Rhythm Training",
+    "description": "Work on consistent swing tempo with various clubs",
+    "category": "Irons",
+    "scoringType": "completion",
+    "defaultMaxScore": 1,
+    "isDefault": true
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440020",
+    "name": "Balance & Setup Drills",
+    "description": "Practice proper stance and balance throughout swing",
+    "category": "Driver",
+    "scoringType": "completion",
+    "defaultMaxScore": 1,
+    "isDefault": true
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440021",
+    "name": "Visualization Practice",
+    "description": "Mental practice - visualize successful shots before hitting",
+    "category": "Putting",
+    "scoringType": "completion",
+    "defaultMaxScore": 1,
+    "isDefault": true
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440022",
+    "name": "Greenside Setup Work",
+    "description": "Practice proper setup and stance for various greenside shots",
+    "category": "Chipping",
+    "scoringType": "completion",
+    "defaultMaxScore": 1,
+    "isDefault": true
+  }
+] 
