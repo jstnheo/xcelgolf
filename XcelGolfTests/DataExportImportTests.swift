@@ -1,6 +1,6 @@
 import XCTest
 import SwiftData
-@testable import CursorDemo
+@testable import XcelGolf
 
 @MainActor
 final class DataExportImportTests: XCTestCase {
