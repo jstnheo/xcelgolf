@@ -1,6 +1,6 @@
 //
-//  CursorDemoApp.swift
-//  CursorDemo
+//  XcelGolfApp.swift
+//  XcelGolf
 //
 //  Created by Justin Heo on 6/2/25.
 //
@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct CursorDemoApp: App {
+struct XcelGolfApp: App {
     @StateObject private var themeManager = ThemeManager()
     
     var sharedModelContainer: ModelContainer = {

@@ -12,37 +12,37 @@
 			containerPortal = EAB362842DEEB08700F9C37F /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = EAB3628B2DEEB08700F9C37F;
-			remoteInfo = CursorDemo;
+			remoteInfo = XcelGolf;
 		};
 		EAB362A92DEEB08900F9C37F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EAB362842DEEB08700F9C37F /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = EAB3628B2DEEB08700F9C37F;
-			remoteInfo = CursorDemo;
+			remoteInfo = XcelGolf;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		EAB3628C2DEEB08700F9C37F /* CursorDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CursorDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		EAB3629E2DEEB08900F9C37F /* CursorDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CursorDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		EAB362A82DEEB08900F9C37F /* CursorDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CursorDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EAB3628C2DEEB08700F9C37F /* XcelGolf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XcelGolf.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EAB3629E2DEEB08900F9C37F /* XcelGolfTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XcelGolfTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EAB362A82DEEB08900F9C37F /* XcelGolfUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XcelGolfUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		EAB3628E2DEEB08700F9C37F /* CursorDemo */ = {
+		EAB3628E2DEEB08700F9C37F /* XcelGolf */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = CursorDemo;
+			path = XcelGolf;
 			sourceTree = "<group>";
 		};
-		EAB362A12DEEB08900F9C37F /* CursorDemoTests */ = {
+		EAB362A12DEEB08900F9C37F /* XcelGolfTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = CursorDemoTests;
+			path = XcelGolfTests;
 			sourceTree = "<group>";
 		};
-		EAB362AB2DEEB08900F9C37F /* CursorDemoUITests */ = {
+		EAB362AB2DEEB08900F9C37F /* XcelGolfUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = CursorDemoUITests;
+			path = XcelGolfUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,9 +75,9 @@
 		EAB362832DEEB08700F9C37F = {
 			isa = PBXGroup;
 			children = (
-				EAB3628E2DEEB08700F9C37F /* CursorDemo */,
-				EAB362A12DEEB08900F9C37F /* CursorDemoTests */,
-				EAB362AB2DEEB08900F9C37F /* CursorDemoUITests */,
+				EAB3628E2DEEB08700F9C37F /* XcelGolf */,
+				EAB362A12DEEB08900F9C37F /* XcelGolfTests */,
+				EAB362AB2DEEB08900F9C37F /* XcelGolfUITests */,
 				EAB3628D2DEEB08700F9C37F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -85,9 +85,9 @@
 		EAB3628D2DEEB08700F9C37F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				EAB3628C2DEEB08700F9C37F /* CursorDemo.app */,
-				EAB3629E2DEEB08900F9C37F /* CursorDemoTests.xctest */,
-				EAB362A82DEEB08900F9C37F /* CursorDemoUITests.xctest */,
+				EAB3628C2DEEB08700F9C37F /* XcelGolf.app */,
+				EAB3629E2DEEB08900F9C37F /* XcelGolfTests.xctest */,
+				EAB362A82DEEB08900F9C37F /* XcelGolfUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,9 +95,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		EAB3628B2DEEB08700F9C37F /* CursorDemo */ = {
+		EAB3628B2DEEB08700F9C37F /* XcelGolf */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EAB362B22DEEB08900F9C37F /* Build configuration list for PBXNativeTarget "CursorDemo" */;
+			buildConfigurationList = EAB362B22DEEB08900F9C37F /* Build configuration list for PBXNativeTarget "XcelGolf" */;
 			buildPhases = (
 				EAB362882DEEB08700F9C37F /* Sources */,
 				EAB362892DEEB08700F9C37F /* Frameworks */,
@@ -108,18 +108,18 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				EAB3628E2DEEB08700F9C37F /* CursorDemo */,
+				EAB3628E2DEEB08700F9C37F /* XcelGolf */,
 			);
-			name = CursorDemo;
+			name = XcelGolf;
 			packageProductDependencies = (
 			);
-			productName = CursorDemo;
-			productReference = EAB3628C2DEEB08700F9C37F /* CursorDemo.app */;
+			productName = XcelGolf;
+			productReference = EAB3628C2DEEB08700F9C37F /* XcelGolf.app */;
 			productType = "com.apple.product-type.application";
 		};
-		EAB3629D2DEEB08900F9C37F /* CursorDemoTests */ = {
+		EAB3629D2DEEB08900F9C37F /* XcelGolfTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EAB362B52DEEB08900F9C37F /* Build configuration list for PBXNativeTarget "CursorDemoTests" */;
+			buildConfigurationList = EAB362B52DEEB08900F9C37F /* Build configuration list for PBXNativeTarget "XcelGolfTests" */;
 			buildPhases = (
 				EAB3629A2DEEB08900F9C37F /* Sources */,
 				EAB3629B2DEEB08900F9C37F /* Frameworks */,
@@ -131,18 +131,18 @@
 				EAB362A02DEEB08900F9C37F /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				EAB362A12DEEB08900F9C37F /* CursorDemoTests */,
+				EAB362A12DEEB08900F9C37F /* XcelGolfTests */,
 			);
-			name = CursorDemoTests;
+			name = XcelGolfTests;
 			packageProductDependencies = (
 			);
-			productName = CursorDemoTests;
-			productReference = EAB3629E2DEEB08900F9C37F /* CursorDemoTests.xctest */;
+			productName = XcelGolfTests;
+			productReference = EAB3629E2DEEB08900F9C37F /* XcelGolfTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		EAB362A72DEEB08900F9C37F /* CursorDemoUITests */ = {
+		EAB362A72DEEB08900F9C37F /* XcelGolfUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EAB362B82DEEB08900F9C37F /* Build configuration list for PBXNativeTarget "CursorDemoUITests" */;
+			buildConfigurationList = EAB362B82DEEB08900F9C37F /* Build configuration list for PBXNativeTarget "XcelGolfUITests" */;
 			buildPhases = (
 				EAB362A42DEEB08900F9C37F /* Sources */,
 				EAB362A52DEEB08900F9C37F /* Frameworks */,
@@ -154,13 +154,13 @@
 				EAB362AA2DEEB08900F9C37F /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				EAB362AB2DEEB08900F9C37F /* CursorDemoUITests */,
+				EAB362AB2DEEB08900F9C37F /* XcelGolfUITests */,
 			);
-			name = CursorDemoUITests;
+			name = XcelGolfUITests;
 			packageProductDependencies = (
 			);
-			productName = CursorDemoUITests;
-			productReference = EAB362A82DEEB08900F9C37F /* CursorDemoUITests.xctest */;
+			productName = XcelGolfUITests;
+			productReference = EAB362A82DEEB08900F9C37F /* XcelGolfUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -186,7 +186,7 @@
 					};
 				};
 			};
-			buildConfigurationList = EAB362872DEEB08700F9C37F /* Build configuration list for PBXProject "CursorDemo" */;
+			buildConfigurationList = EAB362872DEEB08700F9C37F /* Build configuration list for PBXProject "XcelGolf" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -200,9 +200,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				EAB3628B2DEEB08700F9C37F /* CursorDemo */,
-				EAB3629D2DEEB08900F9C37F /* CursorDemoTests */,
-				EAB362A72DEEB08900F9C37F /* CursorDemoUITests */,
+				EAB3628B2DEEB08700F9C37F /* XcelGolf */,
+				EAB3629D2DEEB08900F9C37F /* XcelGolfTests */,
+				EAB362A72DEEB08900F9C37F /* XcelGolfUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -258,12 +258,12 @@
 /* Begin PBXTargetDependency section */
 		EAB362A02DEEB08900F9C37F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = EAB3628B2DEEB08700F9C37F /* CursorDemo */;
+			target = EAB3628B2DEEB08700F9C37F /* XcelGolf */;
 			targetProxy = EAB3629F2DEEB08900F9C37F /* PBXContainerItemProxy */;
 		};
 		EAB362AA2DEEB08900F9C37F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = EAB3628B2DEEB08700F9C37F /* CursorDemo */;
+			target = EAB3628B2DEEB08700F9C37F /* XcelGolf */;
 			targetProxy = EAB362A92DEEB08900F9C37F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -395,20 +395,23 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"CursorDemo/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"XcelGolf/Preview Content\"";
 				DEVELOPMENT_TEAM = Y9U8ZW2LPM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Xcel Golf";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jstnheo.xcel.golf;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -424,20 +427,22 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"CursorDemo/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"XcelGolf/Preview Content\"";
 				DEVELOPMENT_TEAM = Y9U8ZW2LPM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Xcel Golf";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jstnheo.xcel.golf;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -461,7 +466,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CursorDemo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CursorDemo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/XcelGolf.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/XcelGolf";
 			};
 			name = Debug;
 		};
@@ -480,7 +485,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CursorDemo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CursorDemo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/XcelGolf.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/XcelGolf";
 			};
 			name = Release;
 		};
@@ -497,7 +502,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = CursorDemo;
+				TEST_TARGET_NAME = XcelGolf;
 			};
 			name = Debug;
 		};
@@ -514,14 +519,14 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = CursorDemo;
+				TEST_TARGET_NAME = XcelGolf;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		EAB362872DEEB08700F9C37F /* Build configuration list for PBXProject "CursorDemo" */ = {
+		EAB362872DEEB08700F9C37F /* Build configuration list for PBXProject "XcelGolf" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EAB362B02DEEB08900F9C37F /* Debug */,
@@ -530,7 +535,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EAB362B22DEEB08900F9C37F /* Build configuration list for PBXNativeTarget "CursorDemo" */ = {
+		EAB362B22DEEB08900F9C37F /* Build configuration list for PBXNativeTarget "XcelGolf" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EAB362B32DEEB08900F9C37F /* Debug */,
@@ -539,7 +544,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EAB362B52DEEB08900F9C37F /* Build configuration list for PBXNativeTarget "CursorDemoTests" */ = {
+		EAB362B52DEEB08900F9C37F /* Build configuration list for PBXNativeTarget "XcelGolfTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EAB362B62DEEB08900F9C37F /* Debug */,
@@ -548,7 +553,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EAB362B82DEEB08900F9C37F /* Build configuration list for PBXNativeTarget "CursorDemoUITests" */ = {
+		EAB362B82DEEB08900F9C37F /* Build configuration list for PBXNativeTarget "XcelGolfUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EAB362B92DEEB08900F9C37F /* Debug */,
