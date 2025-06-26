@@ -12,6 +12,7 @@ struct SettingsView: View {
     @State private var showingCustomizeDrills = false
     @State private var showingResetDrillsConfirmation = false
     @State private var showingExportData = false
+    @State private var showingImportData = false
     
     var body: some View {
         NavigationView {
@@ -108,6 +109,22 @@ struct SettingsView: View {
                     }
                     .foregroundColor(theme.textPrimary)
                     
+                    // Import Data
+                    Button(action: {
+                        showingImportData = true
+                    }) {
+                        HStack {
+                            Image(systemName: "square.and.arrow.down.fill")
+                                .foregroundColor(theme.primary)
+                            Text("Import Data")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(theme.textSecondary)
+                                .font(.caption)
+                        }
+                    }
+                    .foregroundColor(theme.textPrimary)
+                    
                     // Create Test Data
                     Button(action: {
                         showingTestDataConfirmation = true
@@ -190,6 +207,10 @@ struct SettingsView: View {
         }
         .sheet(isPresented: $showingExportData) {
             ExportDataView()
+                .environmentObject(themeManager)
+        }
+        .sheet(isPresented: $showingImportData) {
+            ImportDataView()
                 .environmentObject(themeManager)
         }
         .confirmationDialog("Reset Drills to Defaults", isPresented: $showingResetDrillsConfirmation) {
