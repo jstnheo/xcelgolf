@@ -4,11 +4,23 @@ import SwiftData
 /// Manages temporary session state before saving to SwiftData
 class SessionManager: ObservableObject {
     @Published var currentSession: TempSession?
+    @Published var shouldCollapseFloatingButton: Bool = false
     
     private let sessionKey = "temp_session_data"
     
     init() {
         loadTempSession()
+    }
+    
+    // MARK: - Floating Button Management
+    
+    /// Triggers the floating button to collapse due to user interaction (scroll/tap)
+    func collapseFloatingButtonOnInteraction() {
+        shouldCollapseFloatingButton = true
+        // Reset after a brief moment to allow the UI to respond and allow future collapse requests
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            self.shouldCollapseFloatingButton = false
+        }
     }
     
     // MARK: - Session Management
@@ -52,9 +64,10 @@ class SessionManager: ObservableObject {
         return getDrillResults(for: category).count
     }
     
-    func saveSessionToSwiftData(modelContext: ModelContext) {
+    func saveSessionToSwiftData(modelContext: ModelContext, toastManager: ToastManager? = nil) {
         guard let tempSession = currentSession else { 
             print("DEBUG: No current session to save")
+            toastManager?.showWarning("No Session", message: "No active session to save")
             return 
         }
         
@@ -101,17 +114,29 @@ class SessionManager: ObservableObject {
         do {
             try modelContext.save()
             print("DEBUG: Successfully saved context")
-            // Clear temp session after successful save
-            clearSession()
+            
+            // Show success toast
+            let drillCount = tempSession.drillResults.count
+            let message = drillCount == 1 ? "1 drill saved" : "\(drillCount) drills saved"
+            toastManager?.showSuccess("Session Saved", message: message)
+            
+            // Clear temp session after successful save (silently)
+            clearSession(toastManager: toastManager, showToast: false)
             print("DEBUG: Cleared temp session")
         } catch {
             print("DEBUG: Failed to save session: \(error)")
+            toastManager?.showError("Save Failed", message: "Unable to save session")
         }
     }
     
-    func clearSession() {
+    func clearSession(toastManager: ToastManager? = nil, showToast: Bool = true) {
+        let hadSession = currentSession != nil
         currentSession = nil
         UserDefaults.standard.removeObject(forKey: sessionKey)
+        
+        if hadSession && showToast {
+            toastManager?.showInfo("Session Cleared", message: "Unsaved changes discarded")
+        }
     }
     
     func forceSave() {

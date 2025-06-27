@@ -269,12 +269,30 @@ struct DrillSelectionCard: View {
                 }
             }
             
-            Slider(
+            CustomSlider(
                 value: scoreBinding,
-                in: 0...Double(drill.defaultMaxScore),
-                step: 1
-            )
-            .tint(theme.primary)
+                in: 0...CGFloat(drill.defaultMaxScore),
+                config: .init(
+                    inActiveTint: theme.divider,
+                    activeTint: theme.primary,
+                    cornerRadius: 12,
+                    extraHeight: 15,
+                    overlayActiveTint: theme.cardBackground,
+                    overlayInActiveTint: theme.textSecondary
+                )
+            ) {
+                HStack {
+                    Image(systemName: "target")
+                        .font(.system(size: 14, weight: .medium))
+                    
+                    Spacer()
+                    
+                    Text("\(state.currentScore)/\(drill.defaultMaxScore)")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                }
+                .padding(.horizontal, 12)
+            }
             .onChange(of: state.currentScore) { _, newValue in
                 // Haptic feedback when slider value changes
                 let impactFeedback = UIImpactFeedbackGenerator(style: .light)
@@ -299,9 +317,9 @@ struct DrillSelectionCard: View {
         }
     }
     
-    private var scoreBinding: Binding<Double> {
+    private var scoreBinding: Binding<CGFloat> {
         Binding(
-            get: { Double(state.currentScore) },
+            get: { CGFloat(state.currentScore) },
             set: { state.currentScore = Int($0) }
         )
     }

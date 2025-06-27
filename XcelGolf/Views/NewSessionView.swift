@@ -5,6 +5,7 @@ struct NewSessionView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(\.theme) private var theme
+    @EnvironmentObject var toastManager: ToastManager
     @State private var date = Date()
     @State private var notes = ""
     
@@ -35,8 +36,10 @@ struct NewSessionView: View {
                         // Explicitly save the context to ensure persistence
                         do {
                             try modelContext.save()
+                            toastManager.showSuccess("Session Created", message: "New practice session added")
                         } catch {
                             print("Failed to save session: \(error)")
+                            toastManager.showError("Create Failed", message: "Unable to create session")
                         }
                         
                         dismiss()
