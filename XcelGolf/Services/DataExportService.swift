@@ -39,7 +39,7 @@ class DataExportService {
     }
     
     private static func exportToCSV(sessions: [PracticeSession]) -> Data? {
-        var csvContent = "Session Date,Session Notes,Drill Name,Drill Description,Category,Max Score,Actual Score,Success Rate,Drill Notes,Completed At\n"
+        var csvContent = "Session Date,Session Notes,Temperature,Weather Condition,Weather Description,Humidity,Feels Like,Wind Speed,Wind Direction,Wind Direction Text,Location Name,Location Type,Location Latitude,Location Longitude,Drill Name,Drill Description,Category,Max Score,Actual Score,Success Rate,Drill Notes,Completed At\n"
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
@@ -49,9 +49,23 @@ class DataExportService {
             let sessionDate = dateFormatter.string(from: session.date)
             let sessionNotes = session.notes?.replacingOccurrences(of: "\"", with: "\"\"") ?? ""
             
+            // Weather and location data
+            let temperature = session.temperature?.description ?? ""
+            let weatherCondition = session.weatherCondition?.replacingOccurrences(of: "\"", with: "\"\"") ?? ""
+            let weatherDescription = session.weatherDescription?.replacingOccurrences(of: "\"", with: "\"\"") ?? ""
+            let humidity = session.humidity?.description ?? ""
+            let feelsLike = session.feelsLikeTemperature?.description ?? ""
+            let windSpeed = session.windSpeed?.description ?? ""
+            let windDirection = session.windDirection?.description ?? ""
+            let windDirectionText = session.windDirectionText?.replacingOccurrences(of: "\"", with: "\"\"") ?? ""
+            let locationName = session.locationName?.replacingOccurrences(of: "\"", with: "\"\"") ?? ""
+            let locationType = session.golfCourseType?.replacingOccurrences(of: "\"", with: "\"\"") ?? ""
+            let locationLatitude = session.latitude?.description ?? ""
+            let locationLongitude = session.longitude?.description ?? ""
+            
             if session.drills.isEmpty {
                 // Session with no drills
-                csvContent += "\"\(sessionDate)\",\"\(sessionNotes)\",,,,,,,,\n"
+                csvContent += "\"\(sessionDate)\",\"\(sessionNotes)\",\"\(temperature)\",\"\(weatherCondition)\",\"\(weatherDescription)\",\"\(humidity)\",\"\(feelsLike)\",\"\(windSpeed)\",\"\(windDirection)\",\"\(windDirectionText)\",\"\(locationName)\",\"\(locationType)\",\"\(locationLatitude)\",\"\(locationLongitude)\",,,,,,,,\n"
             } else {
                 for drill in session.drills {
                     let drillName = drill.name.replacingOccurrences(of: "\"", with: "\"\"")
@@ -73,7 +87,7 @@ class DataExportService {
                     let drillNotes = drill.notes?.replacingOccurrences(of: "\"", with: "\"\"") ?? ""
                     let completedAt = dateFormatter.string(from: drill.completedAt)
                     
-                    csvContent += "\"\(sessionDate)\",\"\(sessionNotes)\",\"\(drillName)\",\"\(drillDescription)\",\"\(category)\",\"\(maxScore)\",\"\(actualScore)\",\"\(successRate)\",\"\(drillNotes)\",\"\(completedAt)\"\n"
+                    csvContent += "\"\(sessionDate)\",\"\(sessionNotes)\",\"\(temperature)\",\"\(weatherCondition)\",\"\(weatherDescription)\",\"\(humidity)\",\"\(feelsLike)\",\"\(windSpeed)\",\"\(windDirection)\",\"\(windDirectionText)\",\"\(locationName)\",\"\(locationType)\",\"\(locationLatitude)\",\"\(locationLongitude)\",\"\(drillName)\",\"\(drillDescription)\",\"\(category)\",\"\(maxScore)\",\"\(actualScore)\",\"\(successRate)\",\"\(drillNotes)\",\"\(completedAt)\"\n"
                 }
             }
         }
@@ -91,6 +105,21 @@ class DataExportService {
                 id: session.id.hashValue.description,
                 date: session.date,
                 notes: session.notes,
+                // Weather data
+                temperature: session.temperature,
+                weatherCondition: session.weatherCondition,
+                weatherDescription: session.weatherDescription,
+                humidity: session.humidity,
+                feelsLikeTemperature: session.feelsLikeTemperature,
+                // Wind data
+                windSpeed: session.windSpeed,
+                windDirection: session.windDirection,
+                windDirectionText: session.windDirectionText,
+                // Location data
+                locationName: session.locationName,
+                locationType: session.golfCourseType,
+                locationLatitude: session.latitude,
+                locationLongitude: session.longitude,
                 drills: session.drills.map { drill in
                     ExportDrill(
                         id: drill.id.hashValue.description,
@@ -139,6 +168,25 @@ struct ExportSession: Codable {
     let id: String
     let date: Date
     let notes: String?
+    
+    // Weather data
+    let temperature: Double?
+    let weatherCondition: String?
+    let weatherDescription: String?
+    let humidity: Int?
+    let feelsLikeTemperature: Double?
+    
+    // Wind data
+    let windSpeed: Double?
+    let windDirection: Int?
+    let windDirectionText: String?
+    
+    // Location data
+    let locationName: String?
+    let locationType: String?
+    let locationLatitude: Double?
+    let locationLongitude: Double?
+    
     let drills: [ExportDrill]
 }
 
