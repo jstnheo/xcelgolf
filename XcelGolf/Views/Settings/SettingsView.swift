@@ -163,7 +163,7 @@ struct SettingsView: View {
                             .foregroundColor(theme.primary)
                         Text("Version")
                         Spacer()
-                        Text("1.0.0")
+                        Text(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown")
                             .foregroundColor(theme.textSecondary)
                     }
                     
@@ -172,7 +172,7 @@ struct SettingsView: View {
                             .foregroundColor(theme.primary)
                         Text("Build")
                         Spacer()
-                        Text("1")
+                        Text(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "Unknown")
                             .foregroundColor(theme.textSecondary)
                     }
                 }
@@ -181,6 +181,10 @@ struct SettingsView: View {
             .navigationBarTitleDisplayMode(.large)
             .background(theme.background)
             .scrollContentBackground(.hidden)
+            .safeAreaInset(edge: .bottom) {
+                // Add padding for floating tab bar
+                Color.clear.frame(height: 80)
+            }
         }
         .confirmationDialog("Erase All Data", isPresented: $showingEraseConfirmation) {
             Button("Erase All Data", role: .destructive) {
