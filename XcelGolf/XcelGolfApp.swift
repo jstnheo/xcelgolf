@@ -12,6 +12,7 @@ import SwiftData
 struct XcelGolfApp: App {
     @StateObject private var themeManager = ThemeManager()
     @StateObject private var toastManager = ToastManager()
+    @StateObject private var locationManager = LocationManager()
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -32,9 +33,14 @@ struct XcelGolfApp: App {
             ContentView()
                 .environmentObject(themeManager)
                 .environmentObject(toastManager)
+                .environmentObject(locationManager)
                 .withThemeManager(themeManager)
                 .themed()
                 .toast(manager: toastManager)
+                .onAppear {
+                    // Request location permission at app launch
+                    locationManager.requestLocationPermission()
+                }
         }
         .modelContainer(sharedModelContainer)
     }

@@ -6,6 +6,7 @@ struct CurrentSessionCardView: View {
     @Environment(\.theme) private var theme
     @State private var showingAddDrill = false
     @EnvironmentObject private var sessionManager: SessionManager
+    @EnvironmentObject private var locationManager: LocationManager
     
     private var hasTempSession: Bool {
         sessionManager.currentSession != nil && !sessionManager.currentSession!.drillResults.isEmpty
@@ -29,13 +30,16 @@ struct CurrentSessionCardView: View {
                 
                 // Location
                 HStack(spacing: 4) {
-                    Image(systemName: "location.fill")
+                    Image(systemName: locationManager.isLoading ? "location.circle" : "location.fill")
                         .foregroundColor(theme.primary)
                         .font(.caption)
-                    Text("Vineyard")
+                        .symbolEffect(.pulse, isActive: locationManager.isLoading)
+                    Text(locationManager.locationName)
                         .font(.subheadline)
                         .fontWeight(.medium)
                         .foregroundColor(theme.textPrimary)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
                 }
             }
             
@@ -115,6 +119,12 @@ struct CurrentSessionCardView: View {
                 NewExerciseView(session: session)
             } else {
                 NewSessionView()
+            }
+        }
+        .onAppear {
+            // Request location update when the card appears
+            if locationManager.authorizationStatus == .authorizedWhenInUse || locationManager.authorizationStatus == .authorizedAlways {
+                locationManager.startLocationUpdates()
             }
         }
     }
