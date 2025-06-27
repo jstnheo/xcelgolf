@@ -11,6 +11,7 @@ import SwiftData
 @main
 struct XcelGolfApp: App {
     @StateObject private var themeManager = ThemeManager()
+    @StateObject private var toastManager = ToastManager()
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -30,8 +31,10 @@ struct XcelGolfApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(themeManager)
+                .environmentObject(toastManager)
                 .withThemeManager(themeManager)
                 .themed()
+                .toast(manager: toastManager)
         }
         .modelContainer(sharedModelContainer)
     }

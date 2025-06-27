@@ -5,6 +5,7 @@ struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.theme) private var theme
     @EnvironmentObject var themeManager: ThemeManager
+    @EnvironmentObject var toastManager: ToastManager
     @State private var showingEraseConfirmation = false
     @State private var showingTestDataConfirmation = false
     @State private var isCreatingTestData = false
@@ -240,6 +241,8 @@ struct SettingsView: View {
         // Delete all practice sessions
         let sessionDescriptor = FetchDescriptor<PracticeSession>()
         let sessions = (try? modelContext.fetch(sessionDescriptor)) ?? []
+        let sessionCount = sessions.count
+        
         for session in sessions {
             modelContext.delete(session)
         }
@@ -247,11 +250,20 @@ struct SettingsView: View {
         // Delete all drills
         let drillDescriptor = FetchDescriptor<Drill>()
         let drills = (try? modelContext.fetch(drillDescriptor)) ?? []
+        let drillCount = drills.count
+        
         for drill in drills {
             modelContext.delete(drill)
         }
         
-        try? modelContext.save()
+        do {
+            try modelContext.save()
+            let message = "Deleted \(sessionCount) sessions and \(drillCount) drills"
+            toastManager.showSuccess("All Data Erased", message: message)
+        } catch {
+            print("Failed to erase data: \(error)")
+            toastManager.showError("Erase Failed", message: "Unable to delete all data")
+        }
     }
     
     private func createTestData() {
@@ -355,8 +367,10 @@ struct SettingsView: View {
                 // Save the context
                 do {
                     try modelContext.save()
+                    toastManager.showSuccess("Test Data Created", message: "10 practice sessions with sample drills added")
                 } catch {
                     print("Failed to save test data: \(error)")
+                    toastManager.showError("Creation Failed", message: "Unable to create test data")
                 }
                 
                 isCreatingTestData = false
@@ -368,6 +382,7 @@ struct SettingsView: View {
         // Reset drill templates to defaults
         let templateService = DrillTemplateService()
         templateService.resetToDefaults()
+        toastManager.showSuccess("Drills Reset", message: "All drills restored to defaults")
     }
 }
 
