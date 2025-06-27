@@ -110,6 +110,7 @@ struct CustomTabBar: View {
     func floatingButton(_ status: Binding<Bool>) -> some View {
         FloatingButton(
             status: status,
+            shouldCollapse: $sessionManager.shouldCollapseFloatingButton,
             actions: {
                 FloatingAction(symbol: "checkmark.circle.fill", tint: theme.surface, background: theme.success) {
                     if sessionManager.currentSession != nil {

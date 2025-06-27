@@ -19,6 +19,22 @@ struct CurrentSessionView: View {
         }
     }
     
+    // MARK: - Event Logging Functions
+    
+    /// Logs scroll events to the console
+    private func logScrollEvent() {
+        print("📱 CurrentSessionView: Scroll detected at \(Date().formatted(date: .omitted, time: .standard))")
+        // Collapse floating button on scroll
+        sessionManager.collapseFloatingButtonOnInteraction()
+    }
+    
+    /// Logs tap events to the console
+    private func logTapEvent(at location: CGPoint) {
+        print("👆 CurrentSessionView: Tap detected at location (\(location.x), \(location.y)) at \(Date().formatted(date: .omitted, time: .standard))")
+        // Collapse floating button on tap
+        sessionManager.collapseFloatingButtonOnInteraction()
+    }
+    
     var body: some View {
         NavigationView {
             ScrollView {
@@ -75,6 +91,21 @@ struct CurrentSessionView: View {
             .scrollIndicators(.hidden)
             .background(theme.background)
             .navigationTitle("Current Session")
+            // Add scroll detection using onScrollGeometryChange (iOS 17+)
+            .onScrollGeometryChange(for: CGFloat.self) { geometry in
+                geometry.contentOffset.y
+            } action: { oldValue, newValue in
+                if oldValue != newValue {
+                    logScrollEvent()
+                }
+            }
+            // Add tap detection using simultaneous gesture
+            .simultaneousGesture(
+                DragGesture(minimumDistance: 0)
+                    .onEnded { value in
+                        logTapEvent(at: value.location)
+                    }
+            )
         }
         .sheet(isPresented: $showingNewSession) {
             NewSessionView()

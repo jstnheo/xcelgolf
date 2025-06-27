@@ -4,11 +4,23 @@ import SwiftData
 /// Manages temporary session state before saving to SwiftData
 class SessionManager: ObservableObject {
     @Published var currentSession: TempSession?
+    @Published var shouldCollapseFloatingButton: Bool = false
     
     private let sessionKey = "temp_session_data"
     
     init() {
         loadTempSession()
+    }
+    
+    // MARK: - Floating Button Management
+    
+    /// Triggers the floating button to collapse due to user interaction (scroll/tap)
+    func collapseFloatingButtonOnInteraction() {
+        shouldCollapseFloatingButton = true
+        // Reset after a brief moment to allow the UI to respond and allow future collapse requests
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            self.shouldCollapseFloatingButton = false
+        }
     }
     
     // MARK: - Session Management
