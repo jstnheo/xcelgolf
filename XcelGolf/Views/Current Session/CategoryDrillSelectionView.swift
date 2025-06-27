@@ -8,7 +8,11 @@ struct CategoryDrillSelectionView: View {
     @State private var originalDrillStates: [String: DrillState] = [:]
     @State private var isInitialized = false
     @State private var hasSaved = false
+    @State private var selectedLocation: PracticeLocation? // Track selected practice location from CurrentSessionCardView
     @EnvironmentObject private var sessionManager: SessionManager
+    @EnvironmentObject private var locationManager: LocationManager
+    @EnvironmentObject private var weatherManager: WeatherManager
+    @EnvironmentObject private var golfCourseManager: GolfCourseManager
     @StateObject private var drillTemplateService = DrillTemplateService()
     
     private var drillsForCategory: [DrillTemplate] {
@@ -112,6 +116,9 @@ struct CategoryDrillSelectionView: View {
         print("DEBUG: Current drill states count: \(drillStates.count)")
         print("DEBUG: Original drill states count: \(originalDrillStates.count)")
         
+        // Check if this is a new session (no current session exists)
+        let isNewSession = sessionManager.currentSession == nil
+        
         var resultsToAdd: [TempDrillResult] = []
         
         for (drillId, currentState) in drillStates {
@@ -144,6 +151,17 @@ struct CategoryDrillSelectionView: View {
                     resultsToAdd.append(result)
                 }
             }
+        }
+        
+        // If we have results to add and this is a new session, capture environment data first
+        if !resultsToAdd.isEmpty && isNewSession {
+            print("🌤️ DEBUG: New session detected, capturing environment data before adding drills")
+            sessionManager.startSessionWithEnvironmentData(
+                weatherManager: weatherManager,
+                locationManager: locationManager,
+                golfCourseManager: golfCourseManager,
+                selectedLocation: selectedLocation
+            )
         }
         
         // Batch add all results at once

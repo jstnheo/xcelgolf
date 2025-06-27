@@ -21,16 +21,14 @@ struct CurrentSessionView: View {
     
     // MARK: - Event Logging Functions
     
-    /// Logs scroll events to the console
-    private func logScrollEvent() {
-        print("📱 CurrentSessionView: Scroll detected at \(Date().formatted(date: .omitted, time: .standard))")
+    /// Handles scroll events and collapses floating button
+    private func handleScrollEvent() {
         // Collapse floating button on scroll
         sessionManager.collapseFloatingButtonOnInteraction()
     }
     
-    /// Logs tap events to the console
-    private func logTapEvent(at location: CGPoint) {
-        print("👆 CurrentSessionView: Tap detected at location (\(location.x), \(location.y)) at \(Date().formatted(date: .omitted, time: .standard))")
+    /// Handles tap events and collapses floating button
+    private func handleTapEvent(at location: CGPoint) {
         // Collapse floating button on tap
         sessionManager.collapseFloatingButtonOnInteraction()
     }
@@ -96,14 +94,14 @@ struct CurrentSessionView: View {
                 geometry.contentOffset.y
             } action: { oldValue, newValue in
                 if oldValue != newValue {
-                    logScrollEvent()
+                    handleScrollEvent()
                 }
             }
             // Add tap detection using simultaneous gesture
             .simultaneousGesture(
                 DragGesture(minimumDistance: 0)
                     .onEnded { value in
-                        logTapEvent(at: value.location)
+                        handleTapEvent(at: value.location)
                     }
             )
         }
