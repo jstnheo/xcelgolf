@@ -5,8 +5,8 @@ struct CurrentSessionCardView: View {
     let session: PracticeSession?
     @Environment(\.theme) private var theme
     @State private var showingAddDrill = false
-    @State private var showingCourseSelection = false
-    @State private var selectedCourse: Course?
+    @State private var showingLocationSelection = false
+    @State private var selectedLocation: PracticeLocation?
     @EnvironmentObject private var sessionManager: SessionManager
     @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var weatherManager: WeatherManager
@@ -18,14 +18,14 @@ struct CurrentSessionCardView: View {
     
     // Computed property for location display
     private var locationDisplayText: String {
-        // If user has selected a specific course, show that
-        if let selectedCourse = selectedCourse {
-            return selectedCourse.displayName
+        // If user has selected a specific location, show that
+        if let selectedLocation = selectedLocation {
+            return selectedLocation.displayName
         }
         
         // Otherwise, show the nearest course or fallback to city name
         if golfCourseManager.isLoading {
-            return "Finding courses..."
+            return "Finding locations..."
         } else if let course = golfCourseManager.nearestCourse {
             return course.displayName
         } else if !locationManager.locationName.isEmpty && locationManager.locationName != "Unknown Location" {
@@ -37,7 +37,13 @@ struct CurrentSessionCardView: View {
     
     // Computed property for location icon
     private var locationIcon: String {
-        let courseToUse = selectedCourse ?? golfCourseManager.nearestCourse
+        // If user has selected a custom location, use its icon
+        if let selectedLocation = selectedLocation {
+            return selectedLocation.icon
+        }
+        
+        // Otherwise, use the nearest course icon or fallback
+        let courseToUse = golfCourseManager.nearestCourse
         
         if golfCourseManager.isLoading {
             return "location.circle"
@@ -59,7 +65,23 @@ struct CurrentSessionCardView: View {
     
     // Computed property for distance display
     private var distanceText: String {
-        let courseToUse = selectedCourse ?? golfCourseManager.nearestCourse
+        // Check if we have a selected location with coordinates
+        if let selectedLocation = selectedLocation {
+            switch selectedLocation {
+            case .custom:
+                return ""  // No distance for custom locations
+            case .golfFacility(let course):
+                guard let locationCoordinate = course.location,
+                      let userLocation = locationManager.location else {
+                    return ""
+                }
+                let distance = userLocation.distance(from: locationCoordinate) / 1609.34 // Convert to miles
+                return distance < 1.0 ? String(format: "%.1f mi", distance) : String(format: "%.0f mi", distance)
+            }
+        }
+        
+        // Fallback to nearest course distance
+        let courseToUse = golfCourseManager.nearestCourse
         
         guard let course = courseToUse,
               let courseLocation = course.location,
@@ -96,7 +118,7 @@ struct CurrentSessionCardView: View {
                     // Location (Golf Course or City)
                     VStack(alignment: .trailing, spacing: 2) {
                         Button(action: {
-                            showingCourseSelection = true
+                            showingLocationSelection = true
                         }) {
                             HStack(spacing: 4) {
                                 Image(systemName: locationIcon)
@@ -212,10 +234,10 @@ struct CurrentSessionCardView: View {
                 NewSessionView()
             }
         }
-        .sheet(isPresented: $showingCourseSelection) {
-            CourseView { course in
-                selectedCourse = course
-                print("📍 User selected golf course: \(course.name)")
+        .sheet(isPresented: $showingLocationSelection) {
+            PracticeLocationView { location in
+                selectedLocation = location
+                print("📍 User selected practice location: \(location.name)")
             }
         }
         .onAppear {

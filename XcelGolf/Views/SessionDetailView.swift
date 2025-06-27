@@ -31,6 +31,83 @@ struct SessionDetailView: View {
                 }
             }
             
+            // Weather & Conditions Section
+            if session.hasWeatherData || session.hasLocationData || session.hasGolfCourseData {
+                Section("Conditions") {
+                    // Weather Information
+                    if session.hasWeatherData {
+                        HStack {
+                            Image(systemName: weatherIcon(for: session.weatherCondition))
+                                .foregroundColor(weatherIconColor(for: session.weatherCondition))
+                                .font(.title3)
+                            
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(session.weatherSummary)
+                                    .foregroundColor(theme.textPrimary)
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                
+                                if let description = session.weatherDescription {
+                                    Text(description.capitalized)
+                                        .foregroundColor(theme.textSecondary)
+                                        .font(.caption)
+                                }
+                            }
+                            
+                            Spacer()
+                            
+                            if let humidity = session.humidity {
+                                VStack(alignment: .trailing, spacing: 2) {
+                                    Text("\(humidity)%")
+                                        .foregroundColor(theme.textPrimary)
+                                        .font(.caption)
+                                        .fontWeight(.medium)
+                                    Text("Humidity")
+                                        .foregroundColor(theme.textSecondary)
+                                        .font(.caption2)
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Location Information
+                    if session.hasLocationData {
+                        HStack {
+                            Image(systemName: session.hasGolfCourseData ? "flag.fill" : "location.fill")
+                                .foregroundColor(theme.primary)
+                                .font(.subheadline)
+                            
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(session.locationSummary)
+                                    .foregroundColor(theme.textPrimary)
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                
+                                if let courseType = session.golfCourseType, session.hasGolfCourseData {
+                                    Text(courseType)
+                                        .foregroundColor(theme.textSecondary)
+                                        .font(.caption)
+                                }
+                            }
+                            
+                            Spacer()
+                            
+                            if let distance = session.distanceToGolfCourse {
+                                VStack(alignment: .trailing, spacing: 2) {
+                                    Text(String(format: "%.1f mi", distance))
+                                        .foregroundColor(theme.textPrimary)
+                                        .font(.caption)
+                                        .fontWeight(.medium)
+                                    Text("Distance")
+                                        .foregroundColor(theme.textSecondary)
+                                        .font(.caption2)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
             Section("Drills") {
                 ForEach(session.drills.sorted { $0.completedAt < $1.completedAt }) { drill in
                     DrillRow(drill: drill)
@@ -51,6 +128,54 @@ struct SessionDetailView: View {
         }
         .sheet(isPresented: $showingAddDrill) {
             NewExerciseView(session: session)
+        }
+    }
+    
+    // MARK: - Helper Methods
+    
+    /// Get weather icon for condition
+    private func weatherIcon(for condition: String?) -> String {
+        guard let condition = condition?.lowercased() else { return "sun.max.fill" }
+        
+        switch condition {
+        case "clear":
+            return "sun.max.fill"
+        case "clouds":
+            return "cloud.fill"
+        case "rain":
+            return "cloud.rain.fill"
+        case "drizzle":
+            return "cloud.drizzle.fill"
+        case "thunderstorm":
+            return "cloud.bolt.fill"
+        case "snow":
+            return "cloud.snow.fill"
+        case "mist", "fog", "haze":
+            return "cloud.fog.fill"
+        default:
+            return "sun.max.fill"
+        }
+    }
+    
+    /// Get weather icon color
+    private func weatherIconColor(for condition: String?) -> Color {
+        guard let condition = condition?.lowercased() else { return .orange }
+        
+        switch condition {
+        case "clear":
+            return .orange
+        case "clouds":
+            return .gray
+        case "rain", "drizzle":
+            return .blue
+        case "thunderstorm":
+            return .purple
+        case "snow":
+            return .white
+        case "mist", "fog", "haze":
+            return .gray
+        default:
+            return .orange
         }
     }
     

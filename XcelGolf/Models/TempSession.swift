@@ -6,6 +6,26 @@ struct TempSession: Codable {
     let startDate: Date
     var drillResults: [TempDrillResult]
     
+    // MARK: - Weather Data
+    var temperature: Double? // Temperature in Fahrenheit
+    var weatherCondition: String? // e.g., "Clear", "Cloudy", "Rain"
+    var weatherDescription: String? // e.g., "clear sky", "light rain"
+    var humidity: Int? // Humidity percentage
+    var feelsLikeTemperature: Double? // Feels like temperature in Fahrenheit
+    
+    // MARK: - Wind Data
+    var windSpeed: Double? // Wind speed in mph
+    var windDirection: Int? // Wind direction in degrees (0-360)
+    var windDirectionText: String? // Wind direction as text (e.g., "NE", "SW")
+    
+    // MARK: - Location Data
+    var locationName: String? // Human-readable location name (city, state)
+    var latitude: Double? // GPS latitude
+    var longitude: Double? // GPS longitude
+    var golfCourseName: String? // Name of the golf course/facility
+    var golfCourseType: String? // Type: "Golf Course", "Driving Range", etc.
+    var distanceToGolfCourse: Double? // Distance to golf course in miles
+    
     init() {
         self.id = UUID().uuidString
         self.startDate = Date()
