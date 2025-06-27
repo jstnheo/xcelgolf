@@ -80,13 +80,19 @@ class GolfCourseManager: ObservableObject {
 
     /// Perform Overpass API request and decode courses
     private func fetchOverpassCourses(lat: Double, lon: Double, radius: Double) async throws -> [Course] {
-        // Overpass QL query
+        // Overpass QL query - search for both golf courses and driving ranges
         let query = """
         [out:json][timeout:25];
         (
           node(around:\(Int(radius)),\(lat),\(lon))["leisure"="golf_course"];
           way(around:\(Int(radius)),\(lat),\(lon))["leisure"="golf_course"];
           rel(around:\(Int(radius)),\(lat),\(lon))["leisure"="golf_course"];
+          node(around:\(Int(radius)),\(lat),\(lon))["golf"="driving_range"];
+          way(around:\(Int(radius)),\(lat),\(lon))["golf"="driving_range"];
+          rel(around:\(Int(radius)),\(lat),\(lon))["golf"="driving_range"];
+          node(around:\(Int(radius)),\(lat),\(lon))["sport"="golf"];
+          way(around:\(Int(radius)),\(lat),\(lon))["sport"="golf"];
+          rel(around:\(Int(radius)),\(lat),\(lon))["sport"="golf"];
         );
         out center;
         """
@@ -98,6 +104,8 @@ class GolfCourseManager: ObservableObject {
         request.httpBody = bodyString.data(using: .utf8)
         request.setValue("application/x-www-form-urlencoded; charset=UTF-8", forHTTPHeaderField: "Content-Type")
 
+        print("⛳ Overpass Query: \(query)")
+
         // Send request
         let (data, response) = try await URLSession.shared.data(for: request)
         guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
@@ -107,15 +115,137 @@ class GolfCourseManager: ObservableObject {
         // Decode Overpass response
         let overpass = try JSONDecoder().decode(OverpassResponse.self, from: data)
 
-        // Map elements to Course
-        return overpass.elements.compactMap { elem in
+        // Map elements to Course with enhanced name detection and filtering
+        let allCourses = overpass.elements.compactMap { elem -> Course? in
             // Determine coords
             let lat = elem.lat ?? elem.center?.lat
             let lon = elem.lon ?? elem.center?.lon
             guard let lat = lat, let lon = lon, let tags = elem.tags else { return nil }
-            let name = tags["name"] ?? "Unnamed Course"
+            
+            // Enhanced name detection with type identification
+            let name = determineName(from: tags)
+            
             return Course(id: elem.id, name: name, latitude: lat, longitude: lon, tags: tags)
         }
+        
+        // Filter out unnamed facilities and only show verified/real places
+        let filteredCourses = allCourses.filter { course in
+            isValidGolfFacility(course)
+        }
+        
+        print("⛳ Found \(allCourses.count) total facilities, filtered to \(filteredCourses.count) verified facilities")
+        return filteredCourses
+    }
+    
+    /// Check if a golf facility is valid (has a proper name and looks like a real place)
+    private func isValidGolfFacility(_ course: Course) -> Bool {
+        let name = course.name.lowercased()
+        
+        // Filter out unnamed facilities
+        if name.hasPrefix("unnamed") {
+            return false
+        }
+        
+        // Filter out very short names (likely incomplete data)
+        if course.name.count < 3 {
+            return false
+        }
+        
+        // Filter out names that are just numbers or coordinates
+        if course.name.allSatisfy({ $0.isNumber || $0.isWhitespace || $0 == "." || $0 == "," || $0 == "-" }) {
+            return false
+        }
+        
+        // Check if the course has a proper name tag (not just generated)
+        if let nameTag = course.tags["name"], !nameTag.isEmpty {
+            // Has a real name - this is good
+            return true
+        }
+        
+        // If no name tag, check for other identifying information
+        if let brand = course.tags["brand"], !brand.isEmpty {
+            // Has a brand name - this is acceptable
+            return true
+        }
+        
+        if let operatorName = course.tags["operator"], !operatorName.isEmpty {
+            // Has an operator name - this is acceptable
+            return true
+        }
+        
+        // Check for website or phone (indicates established business)
+        if course.tags["website"] != nil || course.tags["phone"] != nil {
+            return true
+        }
+        
+        // If none of the above, it's likely incomplete data
+        return false
+    }
+    
+    /// Determine the best name and type for a golf facility
+    private func determineName(from tags: [String: String]) -> String {
+        // First try to get the actual name
+        if let name = tags["name"], !name.isEmpty {
+            let facilityType = determineFacilityType(from: tags)
+            if facilityType != "Golf Course" {
+                return "\(name) (\(facilityType))"
+            }
+            return name
+        }
+        
+        // Try brand name
+        if let brand = tags["brand"], !brand.isEmpty {
+            let facilityType = determineFacilityType(from: tags)
+            if facilityType != "Golf Course" {
+                return "\(brand) (\(facilityType))"
+            }
+            return brand
+        }
+        
+        // Try operator name
+        if let operatorName = tags["operator"], !operatorName.isEmpty {
+            let facilityType = determineFacilityType(from: tags)
+            if facilityType != "Golf Course" {
+                return "\(operatorName) (\(facilityType))"
+            }
+            return operatorName
+        }
+        
+        // If no name, create one based on type (this will be filtered out)
+        let facilityType = determineFacilityType(from: tags)
+        return "Unnamed \(facilityType)"
+    }
+    
+    /// Determine what type of golf facility this is
+    private func determineFacilityType(from tags: [String: String]) -> String {
+        // Check for driving range indicators
+        if tags["golf"] == "driving_range" {
+            return "Driving Range"
+        }
+        
+        // Check for specific golf facility types
+        if let golfType = tags["golf"] {
+            switch golfType {
+            case "driving_range": return "Driving Range"
+            case "practice": return "Practice Facility"
+            case "miniature": return "Mini Golf"
+            case "disc": return "Disc Golf"
+            default: break
+            }
+        }
+        
+        // Check leisure tag
+        if tags["leisure"] == "golf_course" {
+            return "Golf Course"
+        }
+        
+        // Check sport tag
+        if tags["sport"] == "golf" {
+            return "Golf Facility"
+        }
+        
+        // Default
+        return "Golf Course"
     }
 }
 

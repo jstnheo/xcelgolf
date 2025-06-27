@@ -5,6 +5,8 @@ struct CurrentSessionCardView: View {
     let session: PracticeSession?
     @Environment(\.theme) private var theme
     @State private var showingAddDrill = false
+    @State private var showingCourseSelection = false
+    @State private var selectedCourse: Course?
     @EnvironmentObject private var sessionManager: SessionManager
     @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var weatherManager: WeatherManager
@@ -16,6 +18,12 @@ struct CurrentSessionCardView: View {
     
     // Computed property for location display
     private var locationDisplayText: String {
+        // If user has selected a specific course, show that
+        if let selectedCourse = selectedCourse {
+            return selectedCourse.displayName
+        }
+        
+        // Otherwise, show the nearest course or fallback to city name
         if golfCourseManager.isLoading {
             return "Finding courses..."
         } else if let course = golfCourseManager.nearestCourse {
@@ -27,9 +35,33 @@ struct CurrentSessionCardView: View {
         }
     }
     
+    // Computed property for location icon
+    private var locationIcon: String {
+        let courseToUse = selectedCourse ?? golfCourseManager.nearestCourse
+        
+        if golfCourseManager.isLoading {
+            return "location.circle"
+        } else if let course = courseToUse {
+            let name = course.name.lowercased()
+            if name.contains("driving range") || name.contains("range") {
+                return "target"
+            } else if name.contains("mini golf") || name.contains("miniature") {
+                return "figure.golf"
+            } else if name.contains("practice") {
+                return "sportscourt"
+            } else {
+                return "flag.fill"
+            }
+        } else {
+            return "location.fill"
+        }
+    }
+    
     // Computed property for distance display
     private var distanceText: String {
-        guard let course = golfCourseManager.nearestCourse,
+        let courseToUse = selectedCourse ?? golfCourseManager.nearestCourse
+        
+        guard let course = courseToUse,
               let courseLocation = course.location,
               let userLocation = locationManager.location else {
             return ""
@@ -47,43 +79,51 @@ struct CurrentSessionCardView: View {
     var body: some View {
         VStack(spacing: 16) {
             // Date, time, and location
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(Date(), format: .dateTime.weekday(.wide).month(.wide).day())
-                        .font(.headline)
-                        .fontWeight(.semibold)
-                        .foregroundColor(theme.textPrimary)
-                    Text(Date(), format: .dateTime.hour().minute())
-                        .font(.subheadline)
-                        .foregroundColor(theme.textSecondary)
-                }
-                
-                Spacer()
-                
-                // Location (Golf Course or City)
-                VStack(alignment: .trailing, spacing: 2) {
-                    HStack(spacing: 4) {
-                        Image(systemName: golfCourseManager.isLoading ? "location.circle" : 
-                              (golfCourseManager.hasValidCourseData ? "flag.fill" : "location.fill"))
-                            .foregroundColor(theme.primary)
-                            .font(.caption)
-                            .symbolEffect(.pulse, isActive: golfCourseManager.isLoading || locationManager.isLoading)
-                        Text(locationDisplayText)
-                            .font(.subheadline)
-                            .fontWeight(.medium)
+            GeometryReader { geometry in
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(Date(), format: .dateTime.weekday(.wide).month(.wide).day())
+                            .font(.headline)
+                            .fontWeight(.semibold)
                             .foregroundColor(theme.textPrimary)
-                            .lineLimit(1)
-                            .truncationMode(.tail)
-                    }
-                    
-                    // Distance to golf course (if available)
-                    if !distanceText.isEmpty {
-                        Text(distanceText)
-                            .font(.caption)
+                        Text(Date(), format: .dateTime.hour().minute())
+                            .font(.subheadline)
                             .foregroundColor(theme.textSecondary)
                     }
+                    
+                    Spacer()
+                    
+                    // Location (Golf Course or City)
+                    VStack(alignment: .trailing, spacing: 2) {
+                        Button(action: {
+                            showingCourseSelection = true
+                        }) {
+                            HStack(spacing: 4) {
+                                Image(systemName: locationIcon)
+                                    .foregroundColor(theme.primary)
+                                    .font(.caption)
+                                    .symbolEffect(.pulse, isActive: golfCourseManager.isLoading || locationManager.isLoading)
+                                Text(locationDisplayText)
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(theme.textPrimary)
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
+                            }
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        // Distance to golf course (if available)
+                        if !distanceText.isEmpty {
+                            Text(distanceText)
+                                .font(.caption)
+                                .foregroundColor(theme.textSecondary)
+                        }
+                    }
+                    .frame(maxWidth: geometry.size.width * 0.5, alignment: .trailing)
                 }
             }
+            .frame(height: 60) // Fixed height for the date/location section
             
             // Weather information
             HStack(spacing: 16) {
@@ -170,6 +210,12 @@ struct CurrentSessionCardView: View {
                 NewExerciseView(session: session)
             } else {
                 NewSessionView()
+            }
+        }
+        .sheet(isPresented: $showingCourseSelection) {
+            CourseView { course in
+                selectedCourse = course
+                print("📍 User selected golf course: \(course.name)")
             }
         }
         .onAppear {
