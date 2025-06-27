@@ -16,11 +16,16 @@ struct CurrentSessionCardView: View {
         sessionManager.currentSession != nil && !sessionManager.currentSession!.drillResults.isEmpty
     }
     
-    // Computed property for location display
+    // Computed property for location display text
     private var locationDisplayText: String {
         // If user has selected a specific location, show that
         if let selectedLocation = selectedLocation {
             return selectedLocation.displayName
+        }
+        
+        // Check location authorization status first
+        if locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted {
+            return "Set Location"
         }
         
         // Otherwise, show the nearest course or fallback to city name
@@ -31,7 +36,7 @@ struct CurrentSessionCardView: View {
         } else if !locationManager.locationName.isEmpty && locationManager.locationName != "Unknown Location" {
             return locationManager.locationName
         } else {
-            return "Unknown Location"
+            return "Set Location"
         }
     }
     
@@ -40,6 +45,11 @@ struct CurrentSessionCardView: View {
         // If user has selected a custom location, use its icon
         if let selectedLocation = selectedLocation {
             return selectedLocation.icon
+        }
+        
+        // Check location authorization status first
+        if locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted {
+            return "location.badge.plus"
         }
         
         // Otherwise, use the nearest course icon or fallback
@@ -59,7 +69,7 @@ struct CurrentSessionCardView: View {
                 return "flag.fill"
             }
         } else {
-            return "location.fill"
+            return "location.badge.plus"
         }
     }
     

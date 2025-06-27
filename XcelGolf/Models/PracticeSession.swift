@@ -25,7 +25,6 @@ class PracticeSession {
     var longitude: Double? // GPS longitude
     var golfCourseName: String? // Name of the golf course/facility
     var golfCourseType: String? // Type: "Golf Course", "Driving Range", etc.
-    var distanceToGolfCourse: Double? // Distance to golf course in miles
     
     init(date: Date = .now, notes: String? = nil) {
         self.date = date

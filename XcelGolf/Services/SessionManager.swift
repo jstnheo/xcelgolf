@@ -93,25 +93,11 @@ class SessionManager: ObservableObject {
             session.golfCourseName = practiceLocation.name
             session.golfCourseType = practiceLocation.type
             
-            // Calculate distance if we have both user location and practice location coordinates
-            if let userLocation = locationManager.location,
-               let practiceLocationCoordinate = practiceLocation.location {
-                let distance = userLocation.distance(from: practiceLocationCoordinate) / 1609.34 // Convert to miles
-                session.distanceToGolfCourse = distance
-            }
-            
             print("📍 SessionManager: Captured practice location data - \(practiceLocation.name) (\(practiceLocation.type))")
         } else if let course = golfCourseManager.nearestCourse {
             // Fallback to nearest course if no specific location selected
             session.golfCourseName = course.name
             session.golfCourseType = determineCourseType(course: course)
-            
-            // Calculate distance if we have both user location and course location
-            if let userLocation = locationManager.location,
-               let courseLocation = course.location {
-                let distance = userLocation.distance(from: courseLocation) / 1609.34 // Convert to miles
-                session.distanceToGolfCourse = distance
-            }
             
             print("⛳ SessionManager: Captured nearest golf course data - \(course.name)")
         }
@@ -185,7 +171,6 @@ class SessionManager: ObservableObject {
         practiceSession.longitude = tempSession.longitude
         practiceSession.golfCourseName = tempSession.golfCourseName
         practiceSession.golfCourseType = tempSession.golfCourseType
-        practiceSession.distanceToGolfCourse = tempSession.distanceToGolfCourse
         
         print("DEBUG: Created practice session with environment data")
         

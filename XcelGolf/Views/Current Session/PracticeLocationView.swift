@@ -188,34 +188,98 @@ struct PracticeLocationView: View {
             if !golfCourseManager.isLoading && sortedCourses.isEmpty {
                 Section("Nearby Golf Facilities") {
                     VStack(spacing: 12) {
-                        Image(systemName: "location.slash")
-                            .font(.title2)
-                            .foregroundColor(theme.textSecondary)
-                        
-                        Text("No Golf Facilities Found")
-                            .font(.headline)
-                            .foregroundColor(theme.textPrimary)
-                        
-                        Text("No golf courses or driving ranges found within 5km of your location.")
-                            .font(.subheadline)
-                            .foregroundColor(theme.textSecondary)
-                            .multilineTextAlignment(.center)
-                        
-                        if let error = golfCourseManager.errorMessage {
-                            Text("Error: \(error)")
-                                .font(.caption)
+                        // Different empty states based on location permission
+                        if locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted {
+                            // Location permissions denied
+                            Image(systemName: "location.slash.circle")
+                                .font(.title)
                                 .foregroundColor(theme.error)
-                        }
-                        
-                        Button("Refresh") {
-                            if let location = locationManager.location {
-                                golfCourseManager.searchNearbyGolfCourses(location: location)
+                            
+                            Text("Location Access Required")
+                                .font(.headline)
+                                .foregroundColor(theme.textPrimary)
+                            
+                            Text("To find nearby golf courses and driving ranges, please enable location access in Settings.")
+                                .font(.subheadline)
+                                .foregroundColor(theme.textSecondary)
+                                .multilineTextAlignment(.center)
+                            
+                            Button(action: openAppSettings) {
+                                HStack {
+                                    Image(systemName: "gear")
+                                    Text("Open Settings")
+                                        .fontWeight(.medium)
+                                }
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 20)
+                                .padding(.vertical, 10)
+                                .background(theme.primary)
+                                .cornerRadius(8)
                             }
+                            .padding(.top, 8)
+                            
+                        } else if locationManager.authorizationStatus == .notDetermined {
+                            // Location permissions not determined
+                            Image(systemName: "location.circle")
+                                .font(.title)
+                                .foregroundColor(theme.warning)
+                            
+                            Text("Location Permission Needed")
+                                .font(.headline)
+                                .foregroundColor(theme.textPrimary)
+                            
+                            Text("Allow location access to discover golf courses and driving ranges near you.")
+                                .font(.subheadline)
+                                .foregroundColor(theme.textSecondary)
+                                .multilineTextAlignment(.center)
+                            
+                            Button(action: {
+                                locationManager.requestLocationPermission()
+                            }) {
+                                HStack {
+                                    Image(systemName: "location")
+                                    Text("Enable Location")
+                                        .fontWeight(.medium)
+                                }
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 20)
+                                .padding(.vertical, 10)
+                                .background(theme.primary)
+                                .cornerRadius(8)
+                            }
+                            .padding(.top, 8)
+                            
+                        } else {
+                            // Location authorized but no courses found
+                            Image(systemName: "location.slash")
+                                .font(.title2)
+                                .foregroundColor(theme.textSecondary)
+                            
+                            Text("No Golf Facilities Found")
+                                .font(.headline)
+                                .foregroundColor(theme.textPrimary)
+                            
+                            Text("No golf courses or driving ranges found within 5km of your location.")
+                                .font(.subheadline)
+                                .foregroundColor(theme.textSecondary)
+                                .multilineTextAlignment(.center)
+                            
+                            if let error = golfCourseManager.errorMessage {
+                                Text("Error: \(error)")
+                                    .font(.caption)
+                                    .foregroundColor(theme.error)
+                            }
+                            
+                            Button("Refresh") {
+                                if let location = locationManager.location {
+                                    golfCourseManager.searchNearbyGolfCourses(location: location)
+                                }
+                            }
+                            .font(.subheadline)
+                            .foregroundColor(theme.primary)
+                            .padding(.top, 8)
+                            .disabled(golfCourseManager.isLoading || locationManager.location == nil)
                         }
-                        .font(.subheadline)
-                        .foregroundColor(theme.primary)
-                        .padding(.top, 8)
-                        .disabled(golfCourseManager.isLoading || locationManager.location == nil)
                     }
                     .padding(.vertical, 16)
                 }
@@ -260,6 +324,18 @@ struct PracticeLocationView: View {
     
     private func saveSavedCustomLocations() {
         UserDefaults.standard.set(savedCustomLocations, forKey: customLocationsKey)
+    }
+    
+    // MARK: - Helper Methods
+    
+    private func openAppSettings() {
+        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+            return
+        }
+        
+        if UIApplication.shared.canOpenURL(settingsUrl) {
+            UIApplication.shared.open(settingsUrl)
+        }
     }
 }
 
