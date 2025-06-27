@@ -40,6 +40,22 @@ struct ImportResult {
 struct CSVRow {
     let sessionDate: String
     let sessionNotes: String
+    // Weather fields
+    let temperature: String
+    let weatherCondition: String
+    let weatherDescription: String
+    let humidity: String
+    let feelsLike: String
+    // Wind fields
+    let windSpeed: String
+    let windDirection: String
+    let windDirectionText: String
+    // Location fields
+    let locationName: String
+    let locationType: String
+    let locationLatitude: String
+    let locationLongitude: String
+    // Drill fields
     let drillName: String
     let drillDescription: String
     let category: String
@@ -64,7 +80,7 @@ class DataImportService {
         }
         
         // Validate header
-        let expectedHeader = "Session Date,Session Notes,Drill Name,Drill Description,Category,Max Score,Actual Score,Success Rate,Drill Notes,Completed At"
+        let expectedHeader = "Session Date,Session Notes,Temperature,Weather Condition,Weather Description,Humidity,Feels Like,Wind Speed,Wind Direction,Wind Direction Text,Location Name,Location Type,Location Latitude,Location Longitude,Drill Name,Drill Description,Category,Max Score,Actual Score,Success Rate,Drill Notes,Completed At"
         let actualHeader = lines[0].replacingOccurrences(of: "\"", with: "")
         
         guard actualHeader.lowercased().contains("session date") && 
@@ -119,6 +135,38 @@ class DataImportService {
                     notes: sessionNotes
                 )
                 
+                // Set weather data from first row
+                if !firstRow.temperature.isEmpty {
+                    session.temperature = Double(firstRow.temperature)
+                }
+                session.weatherCondition = firstRow.weatherCondition.isEmpty ? nil : firstRow.weatherCondition
+                session.weatherDescription = firstRow.weatherDescription.isEmpty ? nil : firstRow.weatherDescription
+                if !firstRow.humidity.isEmpty {
+                    session.humidity = Int(firstRow.humidity)
+                }
+                if !firstRow.feelsLike.isEmpty {
+                    session.feelsLikeTemperature = Double(firstRow.feelsLike)
+                }
+                
+                // Set wind data from first row
+                if !firstRow.windSpeed.isEmpty {
+                    session.windSpeed = Double(firstRow.windSpeed)
+                }
+                if !firstRow.windDirection.isEmpty {
+                    session.windDirection = Int(firstRow.windDirection)
+                }
+                session.windDirectionText = firstRow.windDirectionText.isEmpty ? nil : firstRow.windDirectionText
+                
+                // Set location data from first row
+                session.locationName = firstRow.locationName.isEmpty ? nil : firstRow.locationName
+                session.golfCourseType = firstRow.locationType.isEmpty ? nil : firstRow.locationType
+                if !firstRow.locationLatitude.isEmpty {
+                    session.latitude = Double(firstRow.locationLatitude)
+                }
+                if !firstRow.locationLongitude.isEmpty {
+                    session.longitude = Double(firstRow.locationLongitude)
+                }
+                
                 // Add drills to session
                 for row in rows {
                     if !row.drillName.isEmpty {
@@ -160,21 +208,33 @@ class DataImportService {
         for line in lines {
             let fields = parseCSVLine(line)
             
-            guard fields.count >= 10 else {
+            guard fields.count >= 22 else {
                 continue // Skip incomplete rows
             }
             
             let row = CSVRow(
                 sessionDate: fields[0],
                 sessionNotes: fields[1],
-                drillName: fields[2],
-                drillDescription: fields[3],
-                category: fields[4],
-                maxScore: fields[5],
-                actualScore: fields[6],
-                successRate: fields[7],
-                drillNotes: fields[8],
-                completedAt: fields[9]
+                temperature: fields[2],
+                weatherCondition: fields[3],
+                weatherDescription: fields[4],
+                humidity: fields[5],
+                feelsLike: fields[6],
+                windSpeed: fields[7],
+                windDirection: fields[8],
+                windDirectionText: fields[9],
+                locationName: fields[10],
+                locationType: fields[11],
+                locationLatitude: fields[12],
+                locationLongitude: fields[13],
+                drillName: fields[14],
+                drillDescription: fields[15],
+                category: fields[16],
+                maxScore: fields[17],
+                actualScore: fields[18],
+                successRate: fields[19],
+                drillNotes: fields[20],
+                completedAt: fields[21]
             )
             
             rows.append(row)

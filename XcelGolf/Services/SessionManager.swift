@@ -1,5 +1,6 @@
 import Foundation
 import SwiftData
+import CoreLocation
 
 /// Manages temporary session state before saving to SwiftData
 class SessionManager: ObservableObject {
@@ -29,6 +30,81 @@ class SessionManager: ObservableObject {
         if currentSession == nil {
             currentSession = TempSession()
         }
+    }
+    
+    /// Start a session and capture current weather, wind, and location data
+    @MainActor
+    func startSessionWithEnvironmentData(
+        weatherManager: WeatherManager,
+        locationManager: LocationManager,
+        golfCourseManager: GolfCourseManager,
+        selectedLocation: PracticeLocation?
+    ) {
+        startSession()
+        captureEnvironmentData(
+            weatherManager: weatherManager,
+            locationManager: locationManager,
+            golfCourseManager: golfCourseManager,
+            selectedLocation: selectedLocation
+        )
+    }
+    
+    /// Capture current weather, wind, and location data for the session
+    @MainActor
+    func captureEnvironmentData(
+        weatherManager: WeatherManager,
+        locationManager: LocationManager,
+        golfCourseManager: GolfCourseManager,
+        selectedLocation: PracticeLocation?
+    ) {
+        guard var session = currentSession else { return }
+        
+        print("🌤️ SessionManager: Capturing environment data for session")
+        
+        // Capture weather data
+        if let weather = weatherManager.currentWeather {
+            session.temperature = weather.main.temp
+            session.weatherCondition = weather.weather.first?.main
+            session.weatherDescription = weather.weather.first?.description
+            session.humidity = weather.main.humidity
+            session.feelsLikeTemperature = weather.main.feelsLike
+            
+            // Capture wind data
+            if let wind = weather.wind {
+                session.windSpeed = wind.speed
+                session.windDirection = wind.deg
+                session.windDirectionText = windDirectionText(from: wind.deg)
+            }
+            
+            print("🌤️ SessionManager: Captured weather data - \(weather.main.temp)°F, \(weather.weather.first?.main ?? "N/A")")
+        }
+        
+        // Capture location data
+        if let location = locationManager.location {
+            session.latitude = location.coordinate.latitude
+            session.longitude = location.coordinate.longitude
+            session.locationName = locationManager.locationName.isEmpty ? nil : locationManager.locationName
+            
+            print("📍 SessionManager: Captured location data - \(location.coordinate.latitude), \(location.coordinate.longitude)")
+        }
+        
+        // Capture practice location data (golf course or custom location)
+        if let practiceLocation = selectedLocation {
+            session.golfCourseName = practiceLocation.name
+            session.golfCourseType = practiceLocation.type
+            
+            print("📍 SessionManager: Captured practice location data - \(practiceLocation.name) (\(practiceLocation.type))")
+        } else if let course = golfCourseManager.nearestCourse {
+            // Fallback to nearest course if no specific location selected
+            session.golfCourseName = course.name
+            session.golfCourseType = determineCourseType(course: course)
+            
+            print("⛳ SessionManager: Captured nearest golf course data - \(course.name)")
+        }
+        
+        // Update the session
+        currentSession = session
+        saveTempSession()
     }
     
     func addDrillResult(_ drill: DrillTemplate, score: Int? = nil, isCompleted: Bool = false) {
@@ -76,7 +152,27 @@ class SessionManager: ObservableObject {
         
         // Create a new PracticeSession
         let practiceSession = PracticeSession(date: tempSession.startDate)
-        print("DEBUG: Created practice session")
+        
+        // Transfer weather data
+        practiceSession.temperature = tempSession.temperature
+        practiceSession.weatherCondition = tempSession.weatherCondition
+        practiceSession.weatherDescription = tempSession.weatherDescription
+        practiceSession.humidity = tempSession.humidity
+        practiceSession.feelsLikeTemperature = tempSession.feelsLikeTemperature
+        
+        // Transfer wind data
+        practiceSession.windSpeed = tempSession.windSpeed
+        practiceSession.windDirection = tempSession.windDirection
+        practiceSession.windDirectionText = tempSession.windDirectionText
+        
+        // Transfer location data
+        practiceSession.locationName = tempSession.locationName
+        practiceSession.latitude = tempSession.latitude
+        practiceSession.longitude = tempSession.longitude
+        practiceSession.golfCourseName = tempSession.golfCourseName
+        practiceSession.golfCourseType = tempSession.golfCourseType
+        
+        print("DEBUG: Created practice session with environment data")
         
         // Insert the practice session into the context first
         modelContext.insert(practiceSession)
@@ -115,9 +211,20 @@ class SessionManager: ObservableObject {
             try modelContext.save()
             print("DEBUG: Successfully saved context")
             
-            // Show success toast
+            // Show success toast with environment data info
             let drillCount = tempSession.drillResults.count
-            let message = drillCount == 1 ? "1 drill saved" : "\(drillCount) drills saved"
+            var message = drillCount == 1 ? "1 drill saved" : "\(drillCount) drills saved"
+            
+            // Add environment data info to toast
+            var envInfo: [String] = []
+            if practiceSession.hasWeatherData { envInfo.append("weather") }
+            if practiceSession.hasLocationData { envInfo.append("location") }
+            if practiceSession.hasGolfCourseData { envInfo.append("course") }
+            
+            if !envInfo.isEmpty {
+                message += " with \(envInfo.joined(separator: ", ")) data"
+            }
+            
             toastManager?.showSuccess("Session Saved", message: message)
             
             // Clear temp session after successful save (silently)
@@ -141,6 +248,32 @@ class SessionManager: ObservableObject {
     
     func forceSave() {
         saveTempSession()
+    }
+    
+    // MARK: - Helper Methods
+    
+    /// Convert wind degree to direction text
+    private func windDirectionText(from degrees: Int?) -> String? {
+        guard let degrees = degrees else { return nil }
+        
+        let directions = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+                         "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
+        let index = Int((Double(degrees) / 22.5).rounded()) % 16
+        return directions[index]
+    }
+    
+    /// Determine course type from Course object
+    private func determineCourseType(course: Course) -> String {
+        let name = course.name.lowercased()
+        if name.contains("driving range") || name.contains("range") {
+            return "Driving Range"
+        } else if name.contains("mini golf") || name.contains("miniature") {
+            return "Mini Golf"
+        } else if name.contains("practice") {
+            return "Practice Facility"
+        } else {
+            return "Golf Course"
+        }
     }
     
     // MARK: - Persistence
