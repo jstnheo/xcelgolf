@@ -14,17 +14,20 @@ struct FloatingButton<Label: View>: View {
     var label: (Bool) -> Label
     @State private var isExpanded: Bool = false // Local state to control expansion
     @Binding var status: Bool // Use a binding to control whether the floating button should expand or collapse
+    @Binding var shouldCollapse: Bool // External trigger to collapse the button
     @State private var hapticTriggered: Bool = false // State to track whether haptic feedback was triggered
     @Environment(\.theme) private var theme
     
     init(
         buttonSize: CGFloat = 50,
         status: Binding<Bool>,  // Accept status as a binding
+        shouldCollapse: Binding<Bool> = .constant(false), // External collapse trigger
         @FloatingActionBuilder actions: @escaping () -> [FloatingAction],
         @ViewBuilder label: @escaping (Bool) -> Label
     ) {
         self.buttonSize = buttonSize
         self._status = status // Bind the passed status here
+        self._shouldCollapse = shouldCollapse
         self.actions = actions()
         self.label = label
     }
@@ -86,6 +89,14 @@ struct FloatingButton<Label: View>: View {
         .onChange(of: status) { _, newStatus in
             if !newStatus {
                 isExpanded = false // Reset the expanded state when status is false
+            }
+        }
+        // Observe external collapse requests
+        .onChange(of: shouldCollapse) { _, shouldCollapseNow in
+            if shouldCollapseNow && isExpanded {
+                withAnimation(.snappy(duration: 0.4, extraBounce: 0)) {
+                    isExpanded = false
+                }
             }
         }
     }
