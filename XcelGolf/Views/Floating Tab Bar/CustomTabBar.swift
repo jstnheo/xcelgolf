@@ -10,6 +10,7 @@ import SwiftUI
 struct CustomTabBar: View {
     @Binding var activeTab: TabModel
     @EnvironmentObject var sessionManager: SessionManager
+    @EnvironmentObject var toastManager: ToastManager
     @Environment(\.modelContext) private var modelContext
     @Environment(\.theme) private var theme
     
@@ -98,7 +99,7 @@ struct CustomTabBar: View {
         .alert("Trash Session", isPresented: $showingTrashConfirmation) {
             Button("Cancel", role: .cancel) { }
             Button("Trash", role: .destructive) {
-                sessionManager.clearSession()
+                sessionManager.clearSession(toastManager: toastManager, showToast: true)
             }
         } message: {
             Text("This will delete all unsaved drill results. This action cannot be undone.")
@@ -112,7 +113,7 @@ struct CustomTabBar: View {
             actions: {
                 FloatingAction(symbol: "checkmark.circle.fill", tint: theme.surface, background: theme.success) {
                     if sessionManager.currentSession != nil {
-                        sessionManager.saveSessionToSwiftData(modelContext: modelContext)
+                        sessionManager.saveSessionToSwiftData(modelContext: modelContext, toastManager: toastManager)
                     }
                 }
                 FloatingAction(symbol: "trash.fill", tint: theme.surface, background: theme.error) {

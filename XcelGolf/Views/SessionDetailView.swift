@@ -4,6 +4,7 @@ import SwiftData
 struct SessionDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.theme) private var theme
+    @EnvironmentObject var toastManager: ToastManager
     @Bindable var session: PracticeSession
     @State private var showingAddDrill = false
     
@@ -56,6 +57,8 @@ struct SessionDetailView: View {
     private func deleteDrills(offsets: IndexSet) {
         withAnimation {
             let sortedDrills = session.drills.sorted { $0.completedAt < $1.completedAt }
+            let drillCount = offsets.count
+            
             for index in offsets {
                 let drill = sortedDrills[index]
                 if let drillIndex = session.drills.firstIndex(of: drill) {
@@ -67,8 +70,11 @@ struct SessionDetailView: View {
             // Explicitly save the context to ensure persistence
             do {
                 try modelContext.save()
+                let message = drillCount == 1 ? "1 drill deleted" : "\(drillCount) drills deleted"
+                toastManager.showSuccess("Drills Deleted", message: message)
             } catch {
                 print("Failed to save after deleting drills: \(error)")
+                toastManager.showError("Delete Failed", message: "Unable to delete drills")
             }
         }
     }
