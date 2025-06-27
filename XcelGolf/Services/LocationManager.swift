@@ -16,6 +16,10 @@ class LocationManager: NSObject, ObservableObject {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.distanceFilter = 100 // Update every 100 meters
+        
+        // Get the current authorization status
+        authorizationStatus = locationManager.authorizationStatus
+        print("📍 LocationManager: Initial authorization status: \(authorizationStatus)")
     }
     
     // MARK: - Public Methods
@@ -28,7 +32,8 @@ class LocationManager: NSObject, ObservableObject {
         case .denied, .restricted:
             print("Location access denied or restricted")
         case .authorizedWhenInUse, .authorizedAlways:
-            startLocationUpdates()
+            // Don't start here - wait for the authorization callback
+            print("Location already authorized, waiting for callback to start updates")
         @unknown default:
             break
         }
@@ -37,15 +42,12 @@ class LocationManager: NSObject, ObservableObject {
     /// Start receiving location updates
     func startLocationUpdates() {
         guard authorizationStatus == .authorizedWhenInUse || authorizationStatus == .authorizedAlways else {
-            print("Location not authorized")
+            print("📍 LocationManager: Location not authorized, status: \(authorizationStatus)")
+            errorMessage = "Location access not authorized"
             return
         }
         
-        guard CLLocationManager.locationServicesEnabled() else {
-            errorMessage = "Location services disabled"
-            return
-        }
-        
+        print("📍 LocationManager: Starting location updates")
         isLoading = true
         locationManager.startUpdatingLocation()
     }
@@ -110,13 +112,19 @@ extension LocationManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let newLocation = locations.last else { return }
         
+        print("📍 LocationManager: Received location update: \(newLocation.coordinate.latitude), \(newLocation.coordinate.longitude)")
+        
         // Only update if the new location is significantly different or it's the first location
         if let currentLocation = location {
             let distance = newLocation.distance(from: currentLocation)
+            print("📍 LocationManager: Distance from previous location: \(distance)m")
             if distance < 100 { // Less than 100 meters difference
+                print("📍 LocationManager: Location change too small, ignoring")
                 return
             }
         }
+        
+        print("📍 LocationManager: Updating location and triggering UI update")
         
         DispatchQueue.main.async {
             self.location = newLocation
@@ -145,18 +153,18 @@ extension LocationManager: CLLocationManagerDelegate {
             
             switch status {
             case .notDetermined:
-                print("Location authorization not determined")
+                print("📍 LocationManager: Location authorization not determined")
             case .denied:
-                print("Location authorization denied")
+                print("📍 LocationManager: Location authorization denied")
                 self.errorMessage = "Location access denied"
             case .restricted:
-                print("Location authorization restricted")
+                print("📍 LocationManager: Location authorization restricted")
                 self.errorMessage = "Location access restricted"
             case .authorizedWhenInUse:
-                print("Location authorized when in use")
+                print("📍 LocationManager: Location authorized when in use - starting updates")
                 self.startLocationUpdates()
             case .authorizedAlways:
-                print("Location authorized always")
+                print("📍 LocationManager: Location authorized always - starting updates")
                 self.startLocationUpdates()
             @unknown default:
                 break
